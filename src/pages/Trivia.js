@@ -1,27 +1,34 @@
 import axios from 'axios'
 import React, { useState, useEffect } from 'react'
-import { Button, Container } from 'react-bootstrap'
+import { Container, Spinner } from 'react-bootstrap'
+import Header from '../components/Header'
 import TriviaCard from '../components/TriviaCard'
 
-const randomItemIndex = (triviaList, setCurrentItemIndex) => {
-  setCurrentItemIndex(Math.floor(Math.random() * Object.keys(triviaList).length))
-  console.log('Call changeItemIndex function')
-}
 const quiz_url = 'https://johnmeade-webdev.github.io/chingu_quiz_api/trial.json'
 
-const gradeQuiz = (score, setScore) => {
-  
+const next = (setCurrentItemIndex, currentItemIndex) => {
+  setCurrentItemIndex(currentItemIndex + 1)
+  console.log(currentItemIndex)
 }
+
+const randomizeQuestions = (setQuestionList,questionList, triviaList) => {
+  const length = triviaList.length
+  // shuffle array of questions into tmpArray
+  let tmpArray = [...Array(length).keys() ].map( i => i+1).sort(() => Math.random() - 0.5)
+  
+  // Choose 10 questions out of tmpArray for the new list of questions
+  const newArray = tmpArray.slice(0,10)
+  console.log(newArray)
+}
+
 const Trivia = () => {
   const [quizItems, setQuizItems] = useState({
     triviaList: {},
     currentItem: {}
   })
   const [currentItemIndex, setCurrentItemIndex] = useState(0)
-  const [score, setScore] = useState(0)
-  const [gradeQuestion, setGradeQuestion] = useState(false)
+  const [questionList, setQuestionList] = useState({})
   const [loading, setLoading] = useState(false)
-
 
   useEffect(() => {
     console.log('useEffect function')
@@ -29,20 +36,25 @@ const Trivia = () => {
       .then((res) => {
         setQuizItems({triviaList: res.data})
         setLoading(true)
-        randomItemIndex(quizItems.triviaList, setCurrentItemIndex)
+        randomizeQuestions(setQuestionList,questionList, res.data)
       })
       .catch(err => {
         console.log(err)
       })
-  }, [loading])
+  }, [])
 
   return (
     <Container>
-      <h1>Trivia Page</h1>
-      {loading ? <TriviaCard 
-        question={quizItems.triviaList[currentItemIndex].question} 
-        choices={quizItems.triviaList[currentItemIndex].choices}
-        next={() => randomItemIndex(quizItems.triviaList, setCurrentItemIndex)} /> : ''}
+      <Header title="Trivia Page" />
+      {loading ?
+        <TriviaCard 
+          question={quizItems.triviaList[currentItemIndex].question} 
+          choices={quizItems.triviaList[currentItemIndex].choices}
+          next={() => next(setCurrentItemIndex, currentItemIndex)} 
+        /> : 
+        <Spinner animation="border" role="status">
+          <span className="sr-only">Loading...</span>
+        </Spinner>}
     </Container>
   )
 }

@@ -1,11 +1,30 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Button, Card, Row, Col, Container } from 'react-bootstrap'
 
-const TriviaCard = ({ question, choices, next }) => {
+const selectAnswer = (e, selectedAnswer, setSelectedAnswer) => {
+  setSelectedAnswer(e.target.value)
+  console.log(selectedAnswer)
+}
+
+const submitScore = (selectedAnswer, triviaIndex, scores, setScores, next) => {
+  let tmpScore = {}
+  tmpScore[triviaIndex] = selectedAnswer
+  setScores({
+    ...scores,
+    ...tmpScore
+  })
+  console.log(JSON.stringify(scores) + " okay")
+  next()
+}
+
+const TriviaCard = ({ trivia: {question, choices}, triviaIndex, next, itemIndex }) => {
+  const [scores, setScores] = useState({})
+  const [selectedAnswer, setSelectedAnswer] = useState("")
+
   return (
     <Card>
       <Card.Header>
-        Question
+        Question {itemIndex + 1}/10
       </Card.Header>
       <Card.Body className="text-center">
         <Card.Title>
@@ -24,7 +43,7 @@ const TriviaCard = ({ question, choices, next }) => {
                     selected={true}
                     block
                     style={{fontSize: "0.9em"}}
-                    onClick={e => console.log(e.target.value)}
+                    onClick={e => selectAnswer(e, selectedAnswer, setSelectedAnswer)}
                   >
                     {choiceKey}: {choices[choiceKey]}
                   </Button>
@@ -34,11 +53,12 @@ const TriviaCard = ({ question, choices, next }) => {
           </Row>
           <Row>
             <Col className="text-center mt-2">
-              <Button onClick={next} variant="secondary">
+              <Button variant="secondary" onClick={() => submitScore(selectedAnswer, triviaIndex, scores, setScores, next)}>
                 Next
               </Button>
             </Col>
           </Row>
+          <p>{selectedAnswer}</p>
         </Container>
       </Card.Body>
     </Card>

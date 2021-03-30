@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 
 import Header from '../components/Header'
 import TriviaCard from '../components/TriviaCard'
-import { fetchTriviaList } from '../redux/trivia/triviaActions'
+import { changeLoadingState, fetchTriviaList } from '../redux/trivia/triviaActions'
 
 const quiz_url = 'https://johnmeade-webdev.github.io/chingu_quiz_api/trial.json'
 
@@ -34,11 +34,10 @@ const calculateScores = () => {
 
 }
 
-const Trivia = ({ fullTriviaList, fetchTriviaList }) => {
+const Trivia = ({ fullTriviaList, fetchTriviaList, loading, changeLoadingState }) => {
   const [currentItemIndex, setCurrentItemIndex] = useState(0)
   const [questionList, setQuestionList] = useState({})
   const [scores, setScores] = useState({})
-  const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
   useEffect(() => {
@@ -48,7 +47,7 @@ const Trivia = ({ fullTriviaList, fetchTriviaList }) => {
         // res.data takes the form: { id, question, topic, choices, answer }
         fetchTriviaList(res.data)
         randomizeQuestions(setQuestionList, res.data)
-        setLoading(true)
+        changeLoadingState()
       })
       .catch(err => {
         setError(err)
@@ -78,10 +77,12 @@ const Trivia = ({ fullTriviaList, fetchTriviaList }) => {
 }
 
 const mapStateToProps = state => ({
-  fullTriviaList: state.trivia.fullTriviaList
+  fullTriviaList: state.trivia.fullTriviaList,
+  loading: state.trivia.loading
 })
 
 const mapDispatchToProps = dispatch => ({
-  fetchTriviaList: trivia => dispatch(fetchTriviaList(trivia))
+  fetchTriviaList: trivia => dispatch(fetchTriviaList(trivia)),
+  changeLoadingState: () => dispatch(changeLoadingState())
 })
 export default connect(mapStateToProps, mapDispatchToProps)(Trivia)

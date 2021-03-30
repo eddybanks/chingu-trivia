@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Container, Card } from 'react-bootstrap'
+import { Button, Container, Card, Form } from 'react-bootstrap'
 
 const TriviaCard = ({ trivia: {question, choices}, triviaIndex, next, itemIndex }) => {
 
@@ -13,7 +13,11 @@ const TriviaCard = ({ trivia: {question, choices}, triviaIndex, next, itemIndex 
           <h4>{question}</h4>
         </Card.Title>
         <Container>
-          
+          {choices.map((idx, choice) => {
+            <Button>
+              {choice}
+            </Button>
+          })}
         </Container>
       </Card.Body>
     </Card>

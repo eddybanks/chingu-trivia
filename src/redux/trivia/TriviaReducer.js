@@ -1,6 +1,6 @@
 const INITIAL_STATE = {
   fullTriviaList: null,
-  loading: false
+  loading: true
 }
 
 const triviaReducer = (state = INITIAL_STATE, action) => {
@@ -13,7 +13,7 @@ const triviaReducer = (state = INITIAL_STATE, action) => {
     case 'CHANGE_LOADING_STATE':
         return {
           ...state,
-          loading: true
+          loading: false
         }
     default:
       return state

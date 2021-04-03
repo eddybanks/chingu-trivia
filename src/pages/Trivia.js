@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 
 import Header from '../components/Header'
 import TriviaCard from '../components/TriviaCard'
-import { changeLoadingState, fetchTriviaList } from '../redux/trivia/triviaActions'
+import { changeLoadingState, fetchTriviaList } from '../redux/trivia/TriviaActions'
 
 const quiz_url = 'https://johnmeade-webdev.github.io/chingu_quiz_api/trial.json'
 
@@ -41,26 +41,32 @@ const Trivia = ({ fullTriviaList, fetchTriviaList, loading, changeLoadingState }
   const [error, setError] = useState(null)
 
   useEffect(() => {
-    console.log('useEffect function')
-    axios.get(quiz_url)
-      .then((res) => {
-        // res.data takes the form: { id, question, topic, choices, answer }
-        fetchTriviaList(res.data)
-        randomizeQuestions(setQuestionList, res.data)
+    async function init() {
+      try {
+        const response = await axios.get(quiz_url)
+        fetchTriviaList(response.data)
+        randomizeQuestions(setQuestionList, response.data)
+      } catch (e) {
+        setError(e)
+      } finally {
         changeLoadingState()
-      })
-      .catch(err => {
-        setError(err)
-      })
+      }
+    }
+    init()
   }, [])
 
   if(error) return;
+  if(loading) return (
+    <Spinner animation="border" role="status">
+      <span className="sr-only">Loading...</span>
+    </Spinner>
+  )
 
   return (
     <Container>
       <Header title="Trivia Page" />
       
-      {loading ?
+      {
         questionList[currentItemIndex] ? 
           <TriviaCard 
             trivia={fullTriviaList[questionList[currentItemIndex]]}
@@ -68,10 +74,8 @@ const Trivia = ({ fullTriviaList, fetchTriviaList, loading, changeLoadingState }
             next={() => next(setCurrentItemIndex, currentItemIndex)}
             scores={scores}
             itemIndex={currentItemIndex}
-          /> : "Ended Quiz" : 
-        <Spinner animation="border" role="status">
-          <span className="sr-only">Loading...</span>
-        </Spinner>}
+          /> : "Ended Quiz"
+        }
     </Container>
   )
 }
@@ -85,4 +89,5 @@ const mapDispatchToProps = dispatch => ({
   fetchTriviaList: trivia => dispatch(fetchTriviaList(trivia)),
   changeLoadingState: () => dispatch(changeLoadingState())
 })
+
 export default connect(mapStateToProps, mapDispatchToProps)(Trivia)

@@ -40,7 +40,7 @@ const TriviaCard = ({ trivia: {question, choices}, triviaIndex, next, itemIndex 
             </Row>
             <Row>
             <Col className="text-center mt-2">
-              <Button variant="secondary">
+              <Button variant="secondary" onClick={next}>
                 Next
               </Button>
               {JSON.stringify(currentQuestion)}

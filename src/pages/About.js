@@ -3,11 +3,14 @@ import React from 'react'
 import Header from '../components/layout/Header'
 
 const About = () => {
-  <>
-    <Header title="About Us" />
-    <section>
-    </section>
-  </>
+  return (
+    <>
+      <Header title="About Us" />
+      <section>
+        <p>This is the about us page!</p>
+      </section>
+    </>
+  )
 }
 
 export default About

@@ -7,15 +7,16 @@ import useFetch from '../services/UseFetch'
 
 const quiz_url = 'https://johnmeade-webdev.github.io/chingu_quiz_api/trial.json'
 
-const next = (setCurrentItemIndex, currentItemIndex, scores) => {
-  setCurrentItemIndex(currentItemIndex + 1)
-  console.log(scores)
-}
-
 const Trivia = () => {
   const [currentItemIndex, setCurrentItemIndex] = useState(0)
   const [scores, setScores] = useState({})
-  const { data: fullTriviaList,questionList,  error, loading } = useFetch(quiz_url)
+  const { data: fullTriviaList, questionList,  error, loading } = useFetch(quiz_url)
+
+  const next = (scores) => {
+    let newIndex = currentItemIndex + 1
+    setCurrentItemIndex(newIndex)
+    console.log(scores)
+  }
 
   if(error) throw error
 

@@ -1,3 +1,5 @@
+import TriviaActionTypes from './TriviaActionTypes'
+
 const INITIAL_STATE = {
   fullTriviaList: null,
   loading: true
@@ -5,12 +7,12 @@ const INITIAL_STATE = {
 
 const triviaReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case 'FETCH_TRIVIA_LIST':
+    case TriviaActionTypes.FETCH_TRIVIA_LIST:
       return {
         ...state,
         fullTriviaList: action.payload
       }
-    case 'CHANGE_LOADING_STATE':
+    case TriviaActionTypes.CHANGE_LOADING_STATE:
         return {
           ...state,
           loading: false

@@ -4,6 +4,7 @@ import Navigation from './components/layout/Navigation'
 import Trivia from './pages/Trivia'
 import About from './pages/About'
 import Homepage from './pages/Homepage'
+import TriviaCardMin from './components/TriviaCardMin'
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <Switch>
         <Route exact path="/" component={Homepage} />
         <Route exact path="/trivia" component={Trivia} />
+        <Route exact path="/triviamin" component={TriviaCardMin} />
         <Route exact path="/about" component={About} />
       </Switch>
     </>

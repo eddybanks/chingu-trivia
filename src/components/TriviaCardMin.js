@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
-import { Container, Card } from 'react-bootstrap'
+import { Container, Card, Form } from 'react-bootstrap'
 import Header from './layout/Header'
 
 const TriviaCardMin = () => {
   const [question, setQuestion] = useState("")
-  const [selectedAnswer, setSelectedAnswer] = useState("")
 
   const testQuestion = {
+    id: 1,
     question: 'Who am I?',
     choices: {
       a: 'An elephant',
@@ -26,9 +26,26 @@ const TriviaCardMin = () => {
             Question 1/10
           </Card.Header>
           <Card.Body>
-            <Card.Title>
-              <h3>{testQuestion.question}</h3>
-            </Card.Title>
+            <Form>
+              <Card.Title>
+                <h3>{testQuestion.question}</h3>
+              </Card.Title>
+              <div>
+              {
+                Object.keys(testQuestion.choices).map((choiceKey, idx) => (
+                  <Form.Check 
+                    key={choiceKey}
+                    type="radio"
+                    name="question"
+                    value={choiceKey}
+                    checked={question === choiceKey}
+                    onChange={e => setQuestion(e.target.value)}
+                    label={`${choiceKey}: ${testQuestion.choices[choiceKey]}`}
+                  />
+                ))
+              }
+              </div>
+            </Form>
           </Card.Body>
         </Card>
       </Container>

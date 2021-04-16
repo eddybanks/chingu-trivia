@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Container, Spinner } from 'react-bootstrap'
 
 import Header from '../components/layout/Header'
+import Results from '../components/Results'
 import TriviaCard from '../components/TriviaCard'
 import useFetch from '../services/UseFetch'
 
@@ -9,13 +10,24 @@ const quiz_url = 'https://johnmeade-webdev.github.io/chingu_quiz_api/trial.json'
 
 const Trivia = () => {
   const [currentItemIndex, setCurrentItemIndex] = useState(0)
-  const [scores, setScores] = useState({})
+  const [selectedAnswers, setSelectedAnswers] = useState(null)
   const { data: fullTriviaList, questionList,  error, loading } = useFetch(quiz_url)
 
-  const next = (scores) => {
+  const next = (selectedAnswer) => {
     let newIndex = currentItemIndex + 1
+    let newSelectedAnswer = {}
+    newSelectedAnswer[currentItemIndex] = { 
+      ...fullTriviaList[questionList[currentItemIndex]],
+      "selected answer": selectedAnswer
+    }
+    setSelectedAnswers({...selectedAnswers, ...newSelectedAnswer})
     setCurrentItemIndex(newIndex)
-    console.log(scores)
+  }
+
+  const emptyAnswers = () => {
+    const newAnswers = {}
+    setSelectedAnswers(newAnswers)
+    setCurrentItemIndex(0)
   }
 
   if(error) throw error
@@ -34,11 +46,13 @@ const Trivia = () => {
         questionList[currentItemIndex] ? 
           <TriviaCard 
             trivia={fullTriviaList[questionList[currentItemIndex]]}
-            triviaIndex={questionList[currentItemIndex]}
-            next={() => next(setCurrentItemIndex, currentItemIndex)}
-            scores={scores}
+            next={next}
             itemIndex={currentItemIndex}
-          /> : "Ended Quiz"
+          /> : 
+          <Results 
+            selectedAnswers={selectedAnswers}
+            emptyAnswers={emptyAnswers}
+          />
         }
     </Container>
   )

@@ -16,10 +16,7 @@ const Trivia = () => {
   const next = (selectedAnswer) => {
     let newIndex = currentItemIndex + 1
     let newSelectedAnswer = {}
-    newSelectedAnswer[currentItemIndex] = { 
-      ...fullTriviaList[questionList[currentItemIndex]],
-      "selected answer": selectedAnswer
-    }
+    newSelectedAnswer[currentItemIndex] = selectedAnswer
     setSelectedAnswers({...selectedAnswers, ...newSelectedAnswer})
     setCurrentItemIndex(newIndex)
   }
@@ -50,6 +47,7 @@ const Trivia = () => {
             itemIndex={currentItemIndex}
           /> : 
           <Results 
+            questions={fullTriviaList[questionList]}
             selectedAnswers={selectedAnswers}
             emptyAnswers={emptyAnswers}
           />

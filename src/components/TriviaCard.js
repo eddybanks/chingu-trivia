@@ -1,13 +1,12 @@
 import React, { useState } from 'react'
 import { Button, Container, Card, Row, Col, Form } from 'react-bootstrap'
-import { connect } from 'react-redux'
 
 const TriviaCard = ({ trivia: {question, choices}, next, itemIndex }) => {
   const [selectedAnswer, setSelectedAnswer] = useState("")
 
   const handleSubmit = e => {
     e.preventDefault()
-    next(selectedAnswer)
+    selectedAnswer && next(selectedAnswer)
     setSelectedAnswer("")
   }
 
@@ -23,29 +22,9 @@ const TriviaCard = ({ trivia: {question, choices}, next, itemIndex }) => {
           </Card.Title>
           <Container>
             <Row className="mt-5">
-                {/* {
-                  Object.keys(choices).map((choiceKey, idx) => (
-                    <Col md={6} key={`trivia-choice-${idx}`} className="mb-2">
-                      <Button 
-                        key={`${idx}-radio-buttons`}
-                        className="mt-2" 
-                        variant="light"
-                        block
-                        style={{fontSize: "0.9em"}}
-                        size="lg"
-                        name="selectedAnswer"
-                        type="radio"
-                        value={choiceKey}
-                        checked={selectedAnswer === choiceKey}
-                        onChange={e => setSelectedAnswer(e.target.value)}
-                      >
-                        {choiceKey}: {choices[choiceKey]}
-                      </Button>
-                    </Col>
-                  ))
-                } */}
               {
                 Object.keys(choices).map((choiceKey, idx) => (
+                  <Col md={6} key={`trivia-choice-${idx}`} className="mb-2">
                   <Form.Check
                     key={choiceKey}
                     type="radio"
@@ -55,6 +34,7 @@ const TriviaCard = ({ trivia: {question, choices}, next, itemIndex }) => {
                     onChange={e => setSelectedAnswer(e.target.value)}
                     label={`${choiceKey}: ${choices[choiceKey]}`}
                   />
+                  </Col>
                 ))
               }
               </Row>
@@ -72,8 +52,4 @@ const TriviaCard = ({ trivia: {question, choices}, next, itemIndex }) => {
   )
 }
 
-const mapStateToProps = state => ({
-  score: state.score
-})
-
-export default connect(mapStateToProps)(TriviaCard)
+export default TriviaCard

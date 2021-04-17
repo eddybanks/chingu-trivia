@@ -5,12 +5,19 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter as Router } from 'react-router-dom'
+import { Provider } from 'react-redux'
+import store from '../src/redux/Store'
+import ErrorBoundary from './components/error-handling/ErrorBoundary'
 
 ReactDOM.render(
   <React.StrictMode>
-    <Router>
-      <App />
-    </Router>
+    <ErrorBoundary>
+      <Provider store={store}>
+        <Router>
+          <App />
+        </Router>
+      </Provider>
+    </ErrorBoundary>
   </React.StrictMode>,
   document.getElementById('root')
 );

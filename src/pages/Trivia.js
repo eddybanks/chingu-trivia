@@ -1,65 +1,57 @@
-import axios from 'axios'
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Container, Spinner } from 'react-bootstrap'
-import Header from '../components/Header'
+
+import Header from '../components/layout/Header'
+import Results from '../components/Results'
 import TriviaCard from '../components/TriviaCard'
+import useFetch from '../services/UseFetch'
 
 const quiz_url = 'https://johnmeade-webdev.github.io/chingu_quiz_api/trial.json'
 
-const next = (setCurrentItemIndex, currentItemIndex, scores) => {
-  setCurrentItemIndex(currentItemIndex + 1)
-  console.log(scores)
-}
-
-const randomizeQuestions = (setQuestionList, fullTriviaList) => {
-  const length = fullTriviaList.length
-  // shuffle array of questions into tmpArray
-  let tmpArray = [...Array(length).keys() ].map( i => i+1).sort(() => Math.random() - 0.5)
-  
-  // Choose 10 questions out of tmpArray for the new list of questions
-  const newArray = tmpArray.slice(0,10)
-  console.log(newArray)
-  setQuestionList(newArray)
-}
-
 const Trivia = () => {
-  const [fullTriviaList, setFullTriviaList] = useState({})
   const [currentItemIndex, setCurrentItemIndex] = useState(0)
-  const [questionList, setQuestionList] = useState([])
-  const [scores, setScores] = useState({})
-  const [loading, setLoading] = useState(false)
+  const [selectedAnswers, setSelectedAnswers] = useState(null)
+  const { data: fullTriviaList, questionList,  error, loading } = useFetch(quiz_url)
 
-  // const { id, question, topic, choices, answer } = fullTriviaList[questionList[currentItemIndex]] 
+  const next = (selectedAnswer) => {
+    let newIndex = currentItemIndex + 1
+    let newSelectedAnswer = {}
+    newSelectedAnswer[currentItemIndex] = selectedAnswer
+    setSelectedAnswers({...selectedAnswers, ...newSelectedAnswer})
+    setCurrentItemIndex(newIndex)
+  }
 
-  useEffect(() => {
-    console.log('useEffect function')
-    axios.get(quiz_url)
-      .then((res) => {
-        setFullTriviaList(res.data)
-        randomizeQuestions(setQuestionList, res.data)
-        setLoading(true)
-      })
-      .catch(err => {
-        console.log(err)
-      })
-  }, [])
+  const emptyAnswers = () => {
+    const newAnswers = {}
+    setSelectedAnswers(newAnswers)
+    setCurrentItemIndex(0)
+  }
+
+  if(error) throw error
+
+  if(loading) return (
+    <Spinner animation="border" role="status">
+      <span className="sr-only">Loading...</span>
+    </Spinner>
+  )
 
   return (
     <Container>
       <Header title="Trivia Page" />
-      {console.log(questionList, questionList[currentItemIndex], fullTriviaList[questionList[currentItemIndex]])}
-      {loading ?
-        questionList[currentItemIndex] ? <TriviaCard 
-          trivia={fullTriviaList[questionList[currentItemIndex]]}
-          triviaIndex={questionList[currentItemIndex]}
-          next={() => next(setCurrentItemIndex, currentItemIndex)}
-          scores={scores}
-          setScores={setScores} 
-          itemIndex={currentItemIndex}
-        /> : "Ended Quiz" : 
-        <Spinner animation="border" role="status">
-          <span className="sr-only">Loading...</span>
-        </Spinner>}
+      
+      {
+        questionList[currentItemIndex] ? 
+          <TriviaCard 
+            trivia={fullTriviaList[questionList[currentItemIndex]]}
+            next={next}
+            itemIndex={currentItemIndex}
+          /> : 
+          <Results 
+            questions={fullTriviaList[questionList]}
+            selectedAnswers={selectedAnswers}
+            emptyAnswers={emptyAnswers}
+          />
+        }
     </Container>
   )
 }

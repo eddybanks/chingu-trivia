@@ -1,14 +1,14 @@
-import { Jumbotron } from "react-bootstrap"
+import { Jumbotron, Container } from "react-bootstrap"
 
 const Homepage = () => {
   return (
-    <>
+    <Container>
       <main>
         <Jumbotron>
-          <h3>Welcome to the Chingu Trivia App!</h3>
+          <h3>Welcome to the Vancouver Trivia App!</h3>
         </Jumbotron>
       </main>
-    </>
+    </Container>
   )
 }
 

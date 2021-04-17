@@ -7,6 +7,7 @@ const TriviaCard = ({ trivia: {question, choices}, next, itemIndex }) => {
   const handleSubmit = e => {
     e.preventDefault()
     selectedAnswer && next(selectedAnswer)
+    // next(selectedAnswer)
     setSelectedAnswer("")
   }
 

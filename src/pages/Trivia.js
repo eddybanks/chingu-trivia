@@ -10,20 +10,23 @@ const quiz_url = 'https://johnmeade-webdev.github.io/chingu_quiz_api/trial.json'
 
 const Trivia = () => {
   const [currentItemIndex, setCurrentItemIndex] = useState(0)
-  const [selectedAnswers, setSelectedAnswers] = useState(null)
+  const [answeredTrivia, setAnsweredTrivia] = useState(null)
   const { data: fullTriviaList, questionList,  error, loading } = useFetch(quiz_url)
 
   const next = (selectedAnswer) => {
     let newIndex = currentItemIndex + 1
     let newSelectedAnswer = {}
-    newSelectedAnswer[currentItemIndex] = selectedAnswer
-    setSelectedAnswers({...selectedAnswers, ...newSelectedAnswer})
+    newSelectedAnswer[currentItemIndex] = {
+      ...fullTriviaList[questionList[currentItemIndex]],
+      selectedAnswer: selectedAnswer
+    }
+    setAnsweredTrivia({...answeredTrivia, ...newSelectedAnswer})
     setCurrentItemIndex(newIndex)
   }
 
   const emptyAnswers = () => {
     const newAnswers = {}
-    setSelectedAnswers(newAnswers)
+    setAnsweredTrivia(newAnswers)
     setCurrentItemIndex(0)
   }
 
@@ -47,8 +50,7 @@ const Trivia = () => {
             itemIndex={currentItemIndex}
           /> : 
           <Results 
-            questions={fullTriviaList[questionList]}
-            selectedAnswers={selectedAnswers}
+            answeredTrivia={answeredTrivia}
             emptyAnswers={emptyAnswers}
           />
         }

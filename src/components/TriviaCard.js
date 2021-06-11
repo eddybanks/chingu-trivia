@@ -29,7 +29,7 @@ const TriviaCard = ({ trivia: { question, choices }, next, itemIndex }) => {
                 <Col md={6} key={`trivia-choice-${idx}`} className="mb-2">
                   <Button
                     type="radio"
-                    variant="secondary"
+                    variant="outline-secondary"
                     name="selectedAnswer"
                     value={choiceKey}
                     checked={selectedAnswer === choiceKey}

@@ -1,21 +1,23 @@
-import React, { useState } from 'react'
-import { Button, Container, Card, Row, Col, Form } from 'react-bootstrap'
+import React, { useState } from "react";
+import { Button, Container, Card, Row, Col, Form } from "react-bootstrap";
 
-const TriviaCard = ({ trivia: {question, choices}, next, itemIndex }) => {
-  const [selectedAnswer, setSelectedAnswer] = useState("")
+const TriviaCard = ({ trivia: { question, choices }, next, itemIndex }) => {
+  const [selectedAnswer, setSelectedAnswer] = useState("");
 
-  const handleSubmit = e => {
-    e.preventDefault()
-    selectedAnswer && next(selectedAnswer)
-    // next(selectedAnswer)
-    setSelectedAnswer("")
-  }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    selectedAnswer && next(selectedAnswer);
+    setSelectedAnswer("");
+  };
+
+  const handleSelect = (e) => {
+    e.preventDefault();
+    setSelectedAnswer(e.target.value);
+  };
 
   return (
     <Card>
-      <Card.Header>
-        Question {itemIndex + 1}/10
-      </Card.Header>
+      <Card.Header>Question {itemIndex + 1}/10</Card.Header>
       <Card.Body className="text-center">
         <Form onSubmit={handleSubmit}>
           <Card.Title>
@@ -23,23 +25,22 @@ const TriviaCard = ({ trivia: {question, choices}, next, itemIndex }) => {
           </Card.Title>
           <Container>
             <Row className="mt-5">
-              {
-                Object.keys(choices).map((choiceKey, idx) => (
-                  <Col md={6} key={`trivia-choice-${idx}`} className="mb-2">
-                  <Form.Check
-                    key={choiceKey}
+              {Object.keys(choices).map((choiceKey, idx) => (
+                <Col md={6} key={`trivia-choice-${idx}`} className="mb-2">
+                  <Button
                     type="radio"
+                    variant="secondary"
                     name="selectedAnswer"
                     value={choiceKey}
                     checked={selectedAnswer === choiceKey}
-                    onChange={e => setSelectedAnswer(e.target.value)}
-                    label={`${choiceKey}: ${choices[choiceKey]}`}
-                  />
-                  </Col>
-                ))
-              }
-              </Row>
-              <Row>
+                    onClick={(e) => handleSelect(e)}
+                  >
+                    {choiceKey}: {choices[choiceKey]}
+                  </Button>
+                </Col>
+              ))}
+            </Row>
+            <Row>
               <Col className="text-center mt-2">
                 <Button variant="secondary" type="submit">
                   Next
@@ -50,7 +51,7 @@ const TriviaCard = ({ trivia: {question, choices}, next, itemIndex }) => {
         </Form>
       </Card.Body>
     </Card>
-  )
-}
+  );
+};
 
-export default TriviaCard
+export default TriviaCard;

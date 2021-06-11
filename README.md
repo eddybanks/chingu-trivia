@@ -1,6 +1,6 @@
-# Chingu Trivia App
+# Edmka Trivia App
 
-This is my submission for the chingu solo project.
+This is a trial trivia app to test out my basic react skills :)
 
 ## Getting Started
 
